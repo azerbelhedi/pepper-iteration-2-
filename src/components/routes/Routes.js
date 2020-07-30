@@ -1,6 +1,7 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import Register from "../auth/Register";
+import Login from "../auth/Login";
 
 export default function Routes() {
   return (
@@ -9,10 +10,10 @@ export default function Routes() {
         <h1> courses</h1>
       </Route>
       <Route exact path="/login">
-        <h1> login</h1>
+        <Login />
       </Route>
       <Route exact path="/register">
-        <Register/>
+        <Register />
       </Route>
     </div>
   );
