@@ -3,7 +3,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { StoreContext } from "../../App";
 
 export default function Login() {
-  let { store, setAction } = useContext(StoreContext);
+  let { store, setStore } = useContext(StoreContext);
 
   const [userInput, setUserInput] = useState({
     email: "",
@@ -18,9 +18,14 @@ export default function Login() {
 
   const _confirmLogin = (id, token) => {
     if (store.status === "offline") {
-      setAction({ ...store, status: "online" });
+      setStore({ ...store, status: "online" });
       //save to cache (token, tokenExpiration)
+      saveToken(token)
     }
+  };
+
+  const saveToken = (token) => {
+    localStorage.setItem("AUTH_TOKEN", token);
   };
 
   if (confirm) {

@@ -5,18 +5,29 @@ import Routes from "./components/routes/Routes";
 export const StoreContext = createContext({});
 
 function App() {
-  const [store, setStore] = useState(initialStore)
+  const [store, setStore] = useState(initialStore);
 
   const setAction = (data) => {
-    setStore(data)
+    setStore(data);
+  };
+
+  if (store.status === "offline") {
+    const AUTH_TOKEN = localStorage.getItem("AUTH_TOKEN");
+    console.log(AUTH_TOKEN);
+
+    if (AUTH_TOKEN !== null && AUTH_TOKEN !== "") {
+      let localStore = store;
+      localStore.status = "online";
+      localStore.auth.token = AUTH_TOKEN;
+
+      setStore(localStore);
+      console.log(store)
+    }
   }
-
-  // use life cycle to check cache for token (cache/local storage or whatever...)
-
 
   return (
     <div className="App">
-      <StoreContext.Provider value = {{store, setAction}} >
+      <StoreContext.Provider value={{ store, setStore }}>
         <Menu />
         <Routes />
       </StoreContext.Provider>
@@ -25,13 +36,13 @@ function App() {
 }
 
 const initialStore = {
-  status : "offline",
-  auth : {
-    token : "",
-    tokenExpiration : "",
-    userId : "",
-    userName : ""
-  }
-}
+  status: "offline",
+  auth: {
+    token: "",
+    tokenExpiration: "",
+    userId: "",
+    userName: "",
+  },
+};
 
 export default App;
