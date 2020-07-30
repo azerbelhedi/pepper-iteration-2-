@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { gql, useMutation, useQuery } from "@apollo/client";
+import { StoreContext } from "../../App";
 
 export default function Login() {
+  let { store, setAction } = useContext(StoreContext);
+
   const [userInput, setUserInput] = useState({
     email: "",
     password: "",
@@ -12,6 +15,13 @@ export default function Login() {
   const { loading, error, data } = useQuery(LOGIN_QUERY, {
     variables: { email: email, password: password },
   });
+
+  const _confirmLogin = (id, token) => {
+    if (store.status === "offline") {
+      setAction({ ...store, status: "online" });
+      //save to cache (token, tokenExpiration)
+    }
+  };
 
   if (confirm) {
     if (loading) {
@@ -24,6 +34,7 @@ export default function Login() {
     }
     if (data) {
       console.log(data);
+      _confirmLogin(data.login.userId, data.login.token);
       return (
         <div>
           <h2>Welcome to Pepper</h2>
